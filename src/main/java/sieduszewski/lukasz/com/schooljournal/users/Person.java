@@ -1,8 +1,6 @@
 package sieduszewski.lukasz.com.schooljournal.users;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -16,15 +14,15 @@ public abstract class Person {
     private String name;
 
     @Id
-    private String personalId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long personalId;
 
     public Person() {
     }
 
-    public Person(String surname, String name, String personalId) {
+    public Person(String surname, String name) {
         this.surname = surname;
         this.name = name;
-        this.personalId = personalId;
     }
 
     public String getSurname() {
@@ -35,7 +33,7 @@ public abstract class Person {
         return name;
     }
 
-    public String getPersonalId() {
+    public long getPersonalId() {
         return personalId;
     }
 
@@ -47,7 +45,7 @@ public abstract class Person {
         this.name = name;
     }
 
-    public void setPersonalId(String personalId) {
+    public void setPersonalId(long personalId) {
         this.personalId = personalId;
     }
 }

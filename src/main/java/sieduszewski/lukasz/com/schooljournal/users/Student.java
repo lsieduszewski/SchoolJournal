@@ -1,8 +1,7 @@
 package sieduszewski.lukasz.com.schooljournal.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import sieduszewski.lukasz.com.schooljournal.classjournal.ClassJournal;
 import sieduszewski.lukasz.com.schooljournal.marks.Mark;
-import sieduszewski.lukasz.com.schooljournal.schooljournal.SchoolJournal;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,26 +14,43 @@ import java.util.List;
 public class Student extends Person {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "schoolJournal_id")
-    private SchoolJournal schoolJournal;
+    @JoinColumn(name = "class_id")
+    private ClassJournal studentClass;
 
-    @JsonIgnore
-    public List<Mark> getStudentMarks() {
+    private List<Mark> marks;
 
-        return schoolJournal.getMarks();
+
+    public void addMark(Mark mark) {
+        if (mark.isInRange())
+            marks.add(mark);
+    }
+
+    public void changeMark(Mark oldMark, Mark newMark) {
+        if (marks.contains(oldMark) && newMark.isInRange()) {
+            marks.remove(oldMark);
+            addMark(newMark);
+        }
+
+    }
+
+    public ClassJournal getStudentClass() {
+        return studentClass;
+    }
+
+    public void setStudentClass(ClassJournal studentClass) {
+        this.studentClass = studentClass;
+    }
+
+    public List<Mark> getMarks() {
+        return marks;
     }
 
     public Student() {
     }
 
-    public Student(String surname, String name, String personalId) {
-        super(surname, name, personalId);
-        schoolJournal = new SchoolJournal(new ArrayList<>());
+    public Student(String surname, String name, ClassJournal studentClass) {
+        super(surname, name);
+        this.studentClass = studentClass;
+        this.marks = new ArrayList<>();
     }
-
-    public SchoolJournal getSchoolJournal() {
-        return schoolJournal;
-    }
-
-
 }

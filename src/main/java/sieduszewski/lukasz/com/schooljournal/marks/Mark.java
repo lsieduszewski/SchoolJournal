@@ -1,8 +1,7 @@
 package sieduszewski.lukasz.com.schooljournal.marks;
 
-import sieduszewski.lukasz.com.schooljournal.schooljournal.SchoolJournal;
-
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public abstract class Mark {
@@ -11,12 +10,35 @@ public abstract class Mark {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne
-    private SchoolJournal schoolJournal;
-
     private double markWage;
     private double markValue;
 
+    public double getMarksWageSum(List<Mark> marks) {
+        double wageSum = 0;
+        for (Mark mark : marks) {
+            wageSum += mark.getMarkWage();
+        }
+        return wageSum;
+    }
+
+    public double getSingleMarkWage(Mark mark) {
+        double singleMarkWage = mark.getMarkWage() * mark.getMarkValue();
+        return singleMarkWage;
+    }
+
+    public double getMarksAvgSum(List<Mark> marks) {
+        double marksAvgSum = 0;
+        for (Mark mark : marks) {
+            marksAvgSum += getSingleMarkWage(mark);
+        }
+        return marksAvgSum;
+    }
+
+    public double getAvgMarks(List<Mark> marks) {
+        double avgMark = getMarksAvgSum(marks) / getMarksWageSum(marks);
+        System.out.println(avgMark);
+        return avgMark;
+    }
 
     public boolean isInRange() {
         if (markValue > 6.0 || markValue < 1.0) {
